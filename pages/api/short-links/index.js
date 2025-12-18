@@ -1,35 +1,18 @@
-import mongoose from "mongoose";
-import dbConnect from "../../../db/dbConnect";
+import dbConnect from '@/db/dbConnect';
+import ShortLink from '@/db/models/ShortLink';
 
 export default async function handler(req, res) {
   await dbConnect();
-  console.log(mongoose.connection.readyState);
+
   switch (req.method) {
-    case "POST":
-      res.status(201).send({
-        title: "위키피디아 Next.js",
-        url: "https://en.wikipedia.org",
-      });
+    case 'POST':
+      const newShortLink = await ShortLink.create(req.body);
+      res.status(201).send(newShortLink);
       break;
 
-    case "GET":
-      res.send([
-        {
-          id: "abc",
-          title: "위키피디아 Next.js",
-          url: "https://en.wikipedia.org",
-        },
-        {
-          id: "def",
-          title: "코드잇 자유게시판",
-          url: "https://codeit.kr",
-        },
-        {
-          id: "ghi",
-          title: "코드잇 질문답변",
-          url: "https://codeit.kr",
-        },
-      ]);
+    case 'GET':
+      const shortLinks = await ShortLink.find();
+      res.send(shortLinks);
       break;
 
     default:
