@@ -1,16 +1,23 @@
-import dbConnect from '@/db/dbConnect';
-import ShortLink from '@/db/models/ShortLink';
+import dbConnect from "@/db/dbConnect";
+import ShortLink from "@/db/models/ShortLink";
+import createShortURL from "@/lib/createShorURL";
 
 export default async function handler(req, res) {
   await dbConnect();
 
   switch (req.method) {
-    case 'POST':
-      const shortLink = await ShortLink.create(req.body);
+    case "POST":
+      const { title, url } = req.body;
+      const shortUrl = createShortURL(url);
+      const shortLink = await ShortLink.create({
+        title,
+        url,
+        shortUrl,
+      });
       res.status(201).send(shortLink);
       break;
 
-    case 'GET':
+    case "GET":
       const shortLinks = await ShortLink.find();
       res.send(shortLinks);
       break;

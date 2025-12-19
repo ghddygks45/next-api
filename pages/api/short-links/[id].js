@@ -1,22 +1,23 @@
-import dbConnect from '@/db/dbConnect';
-import ShortLink from '@/db/models/ShortLink';
+import dbConnect from "@/db/dbConnect";
+import ShortLink from "@/db/models/ShortLink";
 
 export default async function handler(req, res) {
   await dbConnect();
+  // console.log(mongoose.connection.readyState);
   const { id } = req.query;
 
   switch (req.method) {
-    case 'GET':
+    case "GET":
       const shortLink = await ShortLink.findById(id);
       res.send(shortLink);
       break;
 
-    case 'PATCH':
+    case "PATCH":
       const updatedShortLink = await ShortLink.findByIdAndUpdate(id, req.body, { new: true });
       res.send(updatedShortLink);
       break;
 
-    case 'DELETE':
+    case "DELETE":
       await ShortLink.findByIdAndDelete(id);
       res.status(204).send();
       break;

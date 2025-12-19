@@ -1,12 +1,22 @@
-import Head from 'next/head';
-import QRCodeList from '@/components/QRCodeList';
-import Button from '@/components/Button';
-import Link from '@/components/Link';
-import styles from '@/styles/QRCodeListPage.module.css';
+import Head from "next/head";
+import QRCodeList from "@/components/QRCodeList";
+import Button from "@/components/Button";
+import Link from "@/components/Link";
+import styles from "@/styles/QRCodeListPage.module.css";
+import dbConnect from "@/db/dbConnect";
+import QRCode from "@/db/models/QRCode";
 
-export default function QRCodeListPage() {
-  const qrCodes = [];
+export async function getServerSideProps() {
+  await dbConnect();
+  const qrCodes = await QRCode.find();
+  return {
+    props: {
+      qrCodes: JSON.parse(JSON.stringify(qrCodes)),
+    },
+  };
+}
 
+export default function QRCodeListPage({ qrCodes }) {
   return (
     <>
       <Head>
